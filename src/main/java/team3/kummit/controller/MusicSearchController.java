@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import team3.kummit.dto.MusicSearchResponse;
+import team3.kummit.dto.music.MusicSearchResponse;
 import team3.kummit.service.music.MusicResponse;
 import team3.kummit.service.music.MusicSearchService;
 
