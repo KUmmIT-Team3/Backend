@@ -36,6 +36,6 @@ public class EmotionBand {
     @OneToMany(mappedBy = "emotionBand", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Song> songs = new CopyOnWriteArrayList<>();
 
-
+    public void incrementCommentCount() { this.commentCount++; }
 
 }
