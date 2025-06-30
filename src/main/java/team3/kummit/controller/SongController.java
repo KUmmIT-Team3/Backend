@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
-import team3.kummit.dto.SongRequest;
-import team3.kummit.dto.SongResponse;
+import team3.kummit.api.SongRequest;
+import team3.kummit.api.SongResponse;
 import team3.kummit.service.SongService;
 
 @Tag(name = "Song", description = "음악 관리")

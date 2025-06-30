@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
-import team3.kummit.dto.EmotionBandArchiveResponse;
+import team3.kummit.api.EmotionBandArchiveResponse;
 import team3.kummit.service.EmotionBandArchiveService;
 
 @Tag(name = "EmotionBand-Archive", description = "감정밴드 보관 관리")

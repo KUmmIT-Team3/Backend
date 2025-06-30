@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import team3.kummit.api.EmotionBandCreateRequest;
 import team3.kummit.domain.Member;
-import team3.kummit.dto.EmotionBandCreateRequest;
 import team3.kummit.repository.MemberRepository;
 
 @SpringBootTest

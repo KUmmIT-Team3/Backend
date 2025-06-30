@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import team3.kummit.api.CommentRequest;
+import team3.kummit.api.CommentResponse;
 import team3.kummit.domain.Comment;
 import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.Member;
-import team3.kummit.dto.CommentRequest;
-import team3.kummit.dto.CommentResponse;
+import team3.kummit.api.CommentRequest;
+import team3.kummit.api.CommentResponse;
 import team3.kummit.repository.CommentRepository;
 import team3.kummit.repository.EmotionBandRepository;
 import team3.kummit.repository.MemberRepository;

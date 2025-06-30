@@ -1,4 +1,4 @@
-package team3.kummit.dto;
+package team3.kummit.api;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +13,7 @@ import team3.kummit.domain.EmotionBand;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmotionBandDetailResponse {
+public class EmotionBandResponse {
     private Long id;
     private String creatorName;
     private String emotion;
@@ -23,13 +23,11 @@ public class EmotionBandDetailResponse {
     private Integer peopleCount;
     private Integer songCount;
     private Integer commentCount;
+    private boolean isLiked;
     private List<SongResponse> songs;
-    private List<CommentResponse> comments;
-    private boolean isArchived;
-    private boolean liked;
 
-    public static EmotionBandDetailResponse from(EmotionBand emotionBand, List<SongResponse> songs, List<CommentResponse> comments, boolean isArchived, boolean liked) {
-        return EmotionBandDetailResponse.builder()
+    public static EmotionBandResponse from(EmotionBand emotionBand, boolean isLiked, List<SongResponse> songs) {
+        return EmotionBandResponse.builder()
                 .id(emotionBand.getId())
                 .creatorName(emotionBand.getCreatorName())
                 .emotion(emotionBand.getEmotion())
@@ -39,10 +37,8 @@ public class EmotionBandDetailResponse {
                 .peopleCount(emotionBand.getPeopleCount())
                 .songCount(emotionBand.getSongCount())
                 .commentCount(emotionBand.getCommentCount())
+                .isLiked(isLiked)
                 .songs(songs)
-                .comments(comments)
-                .isArchived(isArchived)
-                .liked(liked)
                 .build();
     }
 }

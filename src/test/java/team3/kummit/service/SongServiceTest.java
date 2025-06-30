@@ -16,11 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import team3.kummit.api.SongRequest;
+import team3.kummit.api.SongResponse;
 import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.Member;
 import team3.kummit.domain.Song;
-import team3.kummit.dto.SongRequest;
-import team3.kummit.dto.SongResponse;
 import team3.kummit.exception.ResourceNotFoundException;
 import team3.kummit.repository.EmotionBandRepository;
 import team3.kummit.repository.MemberRepository;

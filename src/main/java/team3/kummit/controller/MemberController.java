@@ -16,9 +16,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import team3.kummit.api.*;
 import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.Member;
-import team3.kummit.dto.*;
 import team3.kummit.service.EmotionBandArchiveService;
 import team3.kummit.service.EmotionBandLikeService;
 import team3.kummit.service.EmotionBandService;
