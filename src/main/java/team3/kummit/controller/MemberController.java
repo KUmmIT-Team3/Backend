@@ -39,7 +39,6 @@ public class MemberController {
     private final EmotionBandService emotionBandService;
     private final EmotionBandLikeService emotionBandLikeService;
     private final EmotionBandArchiveService emotionBandArchiveService;
-    private final MemberApiParser parser;
     private final MemberApiParser memberApiParser;
 
 
@@ -91,8 +90,8 @@ public class MemberController {
     @GetMapping("/my-band")
     public ResponseEntity<MemberBandResponse> memberMyBand(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
-        List<Long> bandIdListOfMember = emotionBandService.findEmotionBandIdListByCreator(memberId);
-        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdList(bandIdListOfMember);
+        List<Long> bandIdListOfMember = emotionBandService.findEmotionBandIdListByMemberId(memberId);
+        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdListWithSongs(bandIdListOfMember);
         List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(memberApiParser::mapToMemberBandResponse).collect(Collectors.toList());
         return ResponseEntity.ok(new MemberBandResponse(collect));
     }
@@ -112,7 +111,7 @@ public class MemberController {
     public ResponseEntity<MemberBandResponse> memberLikeBand(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
         List<Long> bandIdListOfMember = emotionBandLikeService.findEmotionBandListByMemberId(memberId);
-        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdList(bandIdListOfMember);
+        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdListWithSongs(bandIdListOfMember);
         List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(memberApiParser::mapToMemberBandResponse).collect(Collectors.toList());
         return ResponseEntity.ok(new MemberBandResponse(collect));
     }
@@ -133,7 +132,7 @@ public class MemberController {
     public ResponseEntity<MemberBandResponse> memberArchiveBand(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
         List<Long> bandIdListOfMember = emotionBandArchiveService.findEmotionBandIdListByCreator(memberId);
-        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdList(bandIdListOfMember);
+        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdListWithSongs(bandIdListOfMember);
         List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(memberApiParser::mapToMemberBandResponse).collect(Collectors.toList());
         return ResponseEntity.ok(new MemberBandResponse(collect));
     }
