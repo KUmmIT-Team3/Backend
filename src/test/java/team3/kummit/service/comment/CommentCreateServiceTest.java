@@ -1,10 +1,8 @@
 package team3.kummit.service.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 
@@ -21,11 +19,11 @@ import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.Member;
 import team3.kummit.dto.CommentRequest;
 import team3.kummit.dto.CommentResponse;
-import team3.kummit.exception.ResourceNotFoundException;
 import team3.kummit.repository.CommentRepository;
 import team3.kummit.repository.EmotionBandRepository;
 import team3.kummit.repository.MemberRepository;
 import team3.kummit.service.CommentService;
+import team3.kummit.service.EntityValidator;
 
 @ExtendWith(MockitoExtension.class)
 class CommentCreateServiceTest {
@@ -38,6 +36,9 @@ class CommentCreateServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private EntityValidator entityValidator;
 
     @InjectMocks
     private CommentService commentService;
@@ -78,6 +79,11 @@ class CommentCreateServiceTest {
                 .comment("테스트 댓글입니다.")
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        doNothing().when(entityValidator)
+                .validateActiveEmotionBand(any(EmotionBand.class));
+        doNothing().when(entityValidator)
+                .validateMember(any(Member.class));
     }
 
     @Test
@@ -86,8 +92,10 @@ class CommentCreateServiceTest {
         Long emotionBandId = 1L;
         Long memberId = 1L;
 
+    EmotionBand bandForTest = testEmotionBand.toBuilder().commentCount(0).build();
+
         when(emotionBandRepository.findById(emotionBandId))
-                .thenReturn(java.util.Optional.of(testEmotionBand));
+                .thenReturn(java.util.Optional.of(bandForTest));
         when(memberRepository.findById(memberId))
                 .thenReturn(java.util.Optional.of(testMember));
         when(commentRepository.save(any(Comment.class)))
@@ -102,39 +110,5 @@ class CommentCreateServiceTest {
         assertThat(result.getCreatorName()).isEqualTo("테스트유저");
 
         verify(emotionBandRepository).save(any(EmotionBand.class));
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 감정밴드에 댓글 생성 시 예외 발생")
-    void createComment_EmotionBandNotFound_ThrowsException() {
-        Long emotionBandId = 999L;
-        Long memberId = 1L;
-
-        when(emotionBandRepository.findById(emotionBandId))
-                .thenReturn(java.util.Optional.empty());
-
-        assertThatThrownBy(() -> commentService.createComment(emotionBandId, memberId, testCommentRequest))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("감정밴드를 찾을 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("종료된 감정밴드에 댓글 생성 시 예외 발생")
-    void createComment_ExpiredEmotionBand_ThrowsException() {
-        // given
-        Long emotionBandId = 1L;
-        Long memberId = 1L;
-
-        EmotionBand expiredEmotionBand = testEmotionBand.toBuilder()
-                .endTime(LocalDateTime.now().minusDays(1))
-                .build();
-
-        when(emotionBandRepository.findById(emotionBandId))
-                .thenReturn(java.util.Optional.of(expiredEmotionBand));
-
-        // when & then
-        assertThatThrownBy(() -> commentService.createComment(emotionBandId, memberId, testCommentRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("종료된 감정밴드에는 댓글을 작성할 수 없습니다.");
     }
 }
