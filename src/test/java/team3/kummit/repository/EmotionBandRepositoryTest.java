@@ -26,8 +26,5 @@ class EmotionBandRepositoryTest {
     @Test
     void indAllByEmotionBandIdList() {
         List<EmotionBand> allByEmotionBandIdList = repository.findAllByEmotionBandIdList(List.of(1L, 2L, 3L), LocalDateTime.now());
-        for (EmotionBand emotionBand : allByEmotionBandIdList) {
-            System.out.println(emotionBand.getId());
-        }
     }
 }
