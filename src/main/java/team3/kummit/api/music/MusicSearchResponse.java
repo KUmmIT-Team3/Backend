@@ -1,4 +1,4 @@
-package team3.kummit.dto.music;
+package team3.kummit.api.music;
 
 import java.util.List;
 

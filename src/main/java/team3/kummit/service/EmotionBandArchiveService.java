@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import team3.kummit.api.EmotionBandArchiveResponse;
 import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.EmotionBandArchive;
 import team3.kummit.domain.Member;
-import team3.kummit.dto.EmotionBandArchiveResponse;
 import team3.kummit.exception.ResourceNotFoundException;
 import team3.kummit.repository.EmotionBandArchiveRepository;
 import team3.kummit.repository.EmotionBandRepository;

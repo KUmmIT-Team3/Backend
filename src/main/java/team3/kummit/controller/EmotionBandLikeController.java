@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
-import team3.kummit.dto.EmotionBandLikeResponse;
+import team3.kummit.api.EmotionBandLikeResponse;
 import team3.kummit.service.EmotionBandLikeService;
 
 @Tag(name = "EmotionBand-Like", description = "감정밴드 좋아요 관리")

@@ -14,8 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import team3.kummit.dto.CommentRequest;
-import team3.kummit.dto.CommentResponse;
+import team3.kummit.api.CommentRequest;
+import team3.kummit.api.CommentResponse;
 import team3.kummit.service.CommentService;
 
 @Tag(name = "Comment", description = "댓글 관리")

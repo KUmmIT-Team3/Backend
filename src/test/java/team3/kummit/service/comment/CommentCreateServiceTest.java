@@ -16,11 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import team3.kummit.api.CommentRequest;
+import team3.kummit.api.CommentResponse;
 import team3.kummit.domain.Comment;
 import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.Member;
-import team3.kummit.dto.CommentRequest;
-import team3.kummit.dto.CommentResponse;
 import team3.kummit.exception.ResourceNotFoundException;
 import team3.kummit.repository.CommentRepository;
 import team3.kummit.repository.EmotionBandRepository;

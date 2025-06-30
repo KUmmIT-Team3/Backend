@@ -13,10 +13,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import team3.kummit.dto.EmotionBandCreateRequest;
-import team3.kummit.dto.EmotionBandCreateResponse;
-import team3.kummit.dto.EmotionBandDetailResponse;
-import team3.kummit.dto.EmotionBandListResponse;
+import team3.kummit.api.EmotionBandCreateRequest;
+import team3.kummit.api.EmotionBandCreateResponse;
+import team3.kummit.api.EmotionBandDetailResponse;
+import team3.kummit.api.EmotionBandListResponse;
 import team3.kummit.service.EmotionBandService;
 import team3.kummit.service.MemberService;
 

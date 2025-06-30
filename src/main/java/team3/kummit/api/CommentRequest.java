@@ -1,4 +1,4 @@
-package team3.kummit.dto;
+package team3.kummit.api;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
