@@ -4,7 +4,6 @@ package team3.kummit.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +16,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import team3.kummit.api.*;
+import team3.kummit.api.profile.MemberBandResponse;
+import team3.kummit.api.profile.MemberBandResponseDto;
+import team3.kummit.api.profile.MemberProfileResponse;
+import team3.kummit.controller.parser.MemberApiParser;
 import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.Member;
 import team3.kummit.service.EmotionBandArchiveService;
@@ -36,6 +39,7 @@ public class MemberController {
     private final EmotionBandService emotionBandService;
     private final EmotionBandLikeService emotionBandLikeService;
     private final EmotionBandArchiveService emotionBandArchiveService;
+    private final MemberApiParser memberApiParser;
 
 
     @Operation(
@@ -50,9 +54,8 @@ public class MemberController {
     public ResponseEntity<MemberLoginResponse> memberLogin(
             @Parameter(description = "로그인 요청 데이터 (이메일과 비밀번호 포함)")
             @RequestBody MemberLoginRequest memberLoginRequest) {
-        return memberService.findByName(memberLoginRequest.name())
-                .map(member -> ResponseEntity.ok(new MemberLoginResponse(member.getId())))
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        Member member = memberService.findByName(memberLoginRequest.name());
+        return ResponseEntity.ok(new MemberLoginResponse(member.getId()));
     }
 
     @Operation(
@@ -70,13 +73,7 @@ public class MemberController {
     public ResponseEntity<MemberProfileResponse> memberProfileGet(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
         Member member = memberService.findById(memberId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MemberProfileResponse(
-                member.getName(),
-                member.getSignUpDate(),
-                member.getBandCreateCount() != null ? member.getBandCreateCount() : 0,
-                member.getBandJoinCount() != null ? member.getBandJoinCount() : 0,
-                member.getLikeCount() != null ? member.getLikeCount() : 0,
-                member.getSongAddCount() != null ? member.getSongAddCount() : 0));
+        return ResponseEntity.ok(memberApiParser.mapToMemberProfileResponse(member));
     }
 
     @Operation(
@@ -93,9 +90,9 @@ public class MemberController {
     @GetMapping("/my-band")
     public ResponseEntity<MemberBandResponse> memberMyBand(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
-        List<Long> bandIdListOfMember = emotionBandService.findEmotionBandIdListByCreator(memberId);
-        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdList(bandIdListOfMember);
-        List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(this::toDto).collect(Collectors.toList());
+        List<Long> bandIdListOfMember = emotionBandService.findEmotionBandIdListByMemberId(memberId);
+        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdListWithSongs(bandIdListOfMember);
+        List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(memberApiParser::mapToMemberBandResponse).collect(Collectors.toList());
         return ResponseEntity.ok(new MemberBandResponse(collect));
     }
 
@@ -114,8 +111,8 @@ public class MemberController {
     public ResponseEntity<MemberBandResponse> memberLikeBand(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
         List<Long> bandIdListOfMember = emotionBandLikeService.findEmotionBandListByMemberId(memberId);
-        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdList(bandIdListOfMember);
-        List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(this::toDto).collect(Collectors.toList());
+        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdListWithSongs(bandIdListOfMember);
+        List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(memberApiParser::mapToMemberBandResponse).collect(Collectors.toList());
         return ResponseEntity.ok(new MemberBandResponse(collect));
     }
 
@@ -135,46 +132,10 @@ public class MemberController {
     public ResponseEntity<MemberBandResponse> memberArchiveBand(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
         List<Long> bandIdListOfMember = emotionBandArchiveService.findEmotionBandIdListByCreator(memberId);
-        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdList(bandIdListOfMember);
-        List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(this::toDto).collect(Collectors.toList());
+        List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdListWithSongs(bandIdListOfMember);
+        List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(memberApiParser::mapToMemberBandResponse).collect(Collectors.toList());
         return ResponseEntity.ok(new MemberBandResponse(collect));
     }
-
-
-    private MemberBandResponseDto toDto(EmotionBand band) {
-        return new MemberBandResponseDto(
-                band.getEmotion(),
-                band.getCreatorName(),
-                band.getDescription(),
-                band.getSongs().stream()
-                        .map(song -> new MemberBandResponseDto.Music(
-                                song.getAlbumImageLink(),
-                                song.getTitle(),
-                                song.getArtist(),
-                                song.getPreviewLink()
-                        ))
-                        .collect(Collectors.toList()),
-                band.getLikeCount(),
-                band.getPeopleCount(),
-                band.getSongCount(),
-                band.getCommentCount(),
-                band.getEndTime()
-        );
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

@@ -59,7 +59,7 @@ public class EmotionBandService {
         LocalDateTime currentTime = LocalDateTime.now();
 
         // 인기 밴드 조회 (좋아요 수 기준 상위 3개)
-        List<EmotionBand> popularBands = emotionBandRepository.findTop3ByLikeCountAndEndTimeAfter(currentTime);
+        List<EmotionBand> popularBands = emotionBandRepository.findAllByLikeCountAndEndTimeAfter(currentTime);
         List<EmotionBandResponse> popularBandResponses = popularBands.stream()
                 .limit(3) // 최대 3개만
                 .map(band -> {
@@ -73,7 +73,7 @@ public class EmotionBandService {
                 .collect(Collectors.toList());
 
         // 전체 밴드 조회 (최신순 상위 10개)
-        List<EmotionBand> allBands = emotionBandRepository.findTop10ByEndTimeDescAndEndTimeAfter(currentTime);
+        List<EmotionBand> allBands = emotionBandRepository.findAllByEndTimeDescAndEndTimeAfter(currentTime);
         List<EmotionBandResponse> allBandResponses = allBands.stream()
                 .limit(10) // 최대 10개만
                 .map(band -> {
@@ -90,19 +90,6 @@ public class EmotionBandService {
                 .popularBands(popularBandResponses)
                 .allBands(allBandResponses)
                 .build();
-    }
-
-    @Transactional(readOnly = true)
-    public EmotionBandResponse getEmotionBand(Long emotionBandId, Long memberId) {
-        EmotionBand band = emotionBandRepository.findById(emotionBandId)
-                .orElseThrow(() -> new ResourceNotFoundException("감정밴드를 찾을 수 없습니다."));
-
-        boolean isLiked = memberId != null && emotionBandLikeService.isLiked(emotionBandId, memberId);
-        List<SongResponse> songs = songRepository.findByEmotionBandIdOrderByCreatedAtDesc(emotionBandId)
-                .stream()
-                .map(SongResponse::from)
-                .collect(Collectors.toList());
-        return EmotionBandResponse.from(band, isLiked, songs);
     }
 
     @Transactional(readOnly = true)
@@ -129,12 +116,11 @@ public class EmotionBandService {
         return EmotionBandDetailResponse.from(emotionBand, songs, comments, isArchived, isLiked);
     }
 
-
-    public List<Long> findEmotionBandIdListByCreator(Long memberId){
-        return emotionBandRepository.findEmotionBandIdListByCreator(memberId);
+    public List<Long> findEmotionBandIdListByMemberId(Long memberId){
+        return emotionBandRepository.findPkListByCreator(memberId);
     }
 
-    public List<EmotionBand> findAllByEmotionBandIdList(List<Long> emotionBandIdList){
-        return emotionBandRepository.findAllByEmotionBandIdList(emotionBandIdList, LocalDateTime.now());
+    public List<EmotionBand> findAllByEmotionBandIdListWithSongs(List<Long> emotionBandIdList){
+        return emotionBandRepository.findAllByEmotionBandIdListWithSongs(emotionBandIdList, LocalDateTime.now());
     }
 }

@@ -1,6 +1,5 @@
 package team3.kummit.service;
 
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -20,8 +19,9 @@ public class MemberService {
                 .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
-    public Optional<Member> findByName(String name){
-        return memberRepository.findByName(name);
+    public Member findByName(String name){
+        return memberRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
 }
