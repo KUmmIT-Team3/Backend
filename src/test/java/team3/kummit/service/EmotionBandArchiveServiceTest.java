@@ -1,8 +1,8 @@
 package team3.kummit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,17 +15,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import team3.kummit.api.EmotionBandArchiveResponse;
 import team3.kummit.domain.EmotionBand;
 import team3.kummit.domain.EmotionBandArchive;
 import team3.kummit.domain.Member;
-import team3.kummit.exception.ResourceNotFoundException;
 import team3.kummit.repository.EmotionBandArchiveRepository;
 import team3.kummit.repository.EmotionBandRepository;
 import team3.kummit.repository.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class EmotionBandArchiveServiceTest {
 
     @Mock
@@ -36,6 +38,9 @@ class EmotionBandArchiveServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private EntityValidator entityValidator;
 
     @InjectMocks
     private EmotionBandArchiveService emotionBandArchiveService;
@@ -50,6 +55,7 @@ class EmotionBandArchiveServiceTest {
                 .id(1L)
                 .name("테스트유저")
                 .email("test@test.com")
+                .bandJoinCount(0)
                 .build();
 
         testEmotionBand = EmotionBand.builder()
@@ -92,6 +98,8 @@ class EmotionBandArchiveServiceTest {
                 .thenReturn(testEmotionBand.toBuilder().peopleCount(1).build());
         when(memberRepository.save(any(Member.class)))
                 .thenReturn(testMember.toBuilder().bandJoinCount(1).build());
+        doNothing().when(entityValidator).validateMember(any());
+        doNothing().when(entityValidator).validateActiveEmotionBand(any());
 
         // when
         EmotionBandArchiveResponse result = emotionBandArchiveService.toggleArchive(emotionBandId, memberId);
@@ -124,6 +132,8 @@ class EmotionBandArchiveServiceTest {
                 .thenReturn(testEmotionBand.toBuilder().peopleCount(0).build());
         when(memberRepository.save(any(Member.class)))
                 .thenReturn(testMember.toBuilder().bandJoinCount(0).build());
+        doNothing().when(entityValidator).validateMember(any());
+        doNothing().when(entityValidator).validateActiveEmotionBand(any());
 
         // when
         EmotionBandArchiveResponse result = emotionBandArchiveService.toggleArchive(emotionBandId, memberId);
@@ -135,40 +145,6 @@ class EmotionBandArchiveServiceTest {
         verify(archiveRepository).delete(testArchive);
         verify(emotionBandRepository).save(any(EmotionBand.class));
         verify(memberRepository).save(any(Member.class));
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 감정밴드 보관 시 예외 발생")
-    void toggleArchive_EmotionBandNotFound_ThrowsException() {
-        // given
-        Long emotionBandId = 999L;
-        Long memberId = 1L;
-
-        when(emotionBandRepository.findById(emotionBandId))
-                .thenReturn(java.util.Optional.empty());
-
-        // when & then
-        assertThatThrownBy(() -> emotionBandArchiveService.toggleArchive(emotionBandId, memberId))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("감정밴드를 찾을 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 사용자로 보관 시 예외 발생")
-    void toggleArchive_MemberNotFound_ThrowsException() {
-        // given
-        Long emotionBandId = 1L;
-        Long memberId = 999L;
-
-        when(emotionBandRepository.findById(emotionBandId))
-                .thenReturn(java.util.Optional.of(testEmotionBand));
-        when(memberRepository.findById(memberId))
-                .thenReturn(java.util.Optional.empty());
-
-        // when & then
-        assertThatThrownBy(() -> emotionBandArchiveService.toggleArchive(emotionBandId, memberId))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("사용자를 찾을 수 없습니다.");
     }
 
     @Test

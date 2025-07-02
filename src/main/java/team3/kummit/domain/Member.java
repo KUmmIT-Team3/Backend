@@ -39,5 +39,8 @@ public class Member {
     public void incrementSongAddCount() {
         this.songAddCount++;
     }
+    public void decrementBandJoinCount() {
+        this.bandJoinCount--;
+    }
 
 }
