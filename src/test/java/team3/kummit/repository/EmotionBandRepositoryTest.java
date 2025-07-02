@@ -1,30 +1,28 @@
 package team3.kummit.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import team3.kummit.domain.EmotionBand;
 
 
-@SpringBootTest
+@DataJpaTest
 class EmotionBandRepositoryTest {
 
     @Autowired
     EmotionBandRepository repository;
 
     @Test
-    void findAllByEmotionBandIdList() {
-        List<Long> emotionBandIdListByCreator = repository.findEmotionBandIdListByCreator(1L);
+    void findAllByEmotionBandIdListWithSongs() {
+        List<Long> emotionBandIdListByCreator = repository.findPkListByCreator(1L);
     }
     @Test
-    void indAllByEmotionBandIdList() {
-        List<EmotionBand> allByEmotionBandIdList = repository.findAllByEmotionBandIdList(List.of(1L, 2L, 3L), LocalDateTime.now());
+    void findAllByEmotionBandIdList() {
+        List<EmotionBand> allByEmotionBandIdList = repository.findAllByEmotionBandIdListWithSongs(List.of(1L, 2L, 3L), LocalDateTime.now());
     }
 }

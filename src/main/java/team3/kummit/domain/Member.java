@@ -30,11 +30,14 @@ public class Member {
     public void incrementBandCreateCount() {
         this.bandCreateCount++;
     }
-    public void incrementSongAddCount() {
-        this.songAddCount++;
-    }
     public void incrementBandJoinCount() {
         this.bandJoinCount++;
+    }
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
+    public void incrementSongAddCount() {
+        this.songAddCount++;
     }
     public void decrementBandJoinCount() {
         this.bandJoinCount--;

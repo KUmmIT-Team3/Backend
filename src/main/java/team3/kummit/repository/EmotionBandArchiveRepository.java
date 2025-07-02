@@ -17,6 +17,4 @@ public interface EmotionBandArchiveRepository extends JpaRepository<EmotionBandA
     @Query("SELECT eba.emotionBand.id FROM EmotionBandArchive eba WHERE eba.creator.id = :memberId")
     List<Long> findEmotionBandIdListByMemberId(@Param("memberId") Long memberId);
 
-    @Query("SELECT eb.id FROM EmotionBand eb where eb.creator.id =:memberId")
-    List<Long> findEmotionBandIdListByCreator(Long memberId);
 }

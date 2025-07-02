@@ -1,4 +1,4 @@
-package team3.kummit.api;
+package team3.kummit.api.profile;
 
 import java.time.LocalDate;
 
