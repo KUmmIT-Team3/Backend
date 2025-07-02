@@ -14,21 +14,20 @@ public class LogInterceptor implements HandlerInterceptor {
 
     private static final String LOG_ID = "logId";
     private static final String START_TIME = "startTime";
+    private static final String MEMBER_ID = "memberId";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String requestURI = request.getRequestURI();
         String logId = UUID.randomUUID().toString();
+        String memberId = request.getParameter(MEMBER_ID) == null ? "0" : request.getParameter(MEMBER_ID);
 
         request.setAttribute(LOG_ID, logId);
         request.setAttribute(START_TIME, System.currentTimeMillis());
 
         if (handler instanceof HandlerMethod handlerMethod) {
-            log.info("REQUEST [{}][{}][{}]", logId, requestURI, handlerMethod.getMethod().getName());
-        } else {
-            log.info("REQUEST [{}][{}][{}]", logId, requestURI, handler);
+            log.info("REQUEST [{}][{}][{}] from memberId = {}", logId, requestURI, handlerMethod.getMethod().getName(), memberId);
         }
-
         return true;
     }
 
