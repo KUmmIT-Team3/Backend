@@ -38,4 +38,11 @@ public class EmotionBand {
 
     public void incrementCommentCount() { this.commentCount++; }
 
+    public void incrementPeopleCount() {
+        this.peopleCount++;
+    }
+    public void decrementPeopleCount() {
+        this.peopleCount--;
+    }
+
 }

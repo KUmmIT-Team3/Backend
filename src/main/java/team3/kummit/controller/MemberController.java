@@ -134,7 +134,7 @@ public class MemberController {
     @GetMapping("/archive-band")
     public ResponseEntity<MemberBandResponse> memberArchiveBand(
             @Parameter(description = "사용자 ID") @RequestParam Long memberId) {
-        List<Long> bandIdListOfMember = emotionBandArchiveService.findEmotionBandIdListByCreator(memberId);
+        List<Long> bandIdListOfMember = emotionBandArchiveService.findArchivedEmotionBandIdsByMember(memberId);
         List<EmotionBand> allByEmotionBandIdList = emotionBandService.findAllByEmotionBandIdList(bandIdListOfMember);
         List<MemberBandResponseDto> collect = allByEmotionBandIdList.stream().map(this::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(new MemberBandResponse(collect));
