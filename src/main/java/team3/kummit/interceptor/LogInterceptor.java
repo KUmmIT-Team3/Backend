@@ -24,6 +24,7 @@ public class LogInterceptor implements HandlerInterceptor {
 
         request.setAttribute(LOG_ID, logId);
         request.setAttribute(START_TIME, System.currentTimeMillis());
+        request.setAttribute(MEMBER_ID, memberId);
 
         if (handler instanceof HandlerMethod handlerMethod) {
             log.info("REQUEST [{}][{}][{}] from memberId = {}", logId, requestURI, handlerMethod.getMethod().getName(), memberId);
@@ -36,10 +37,11 @@ public class LogInterceptor implements HandlerInterceptor {
                                 Object handler, Exception ex) {
         String requestURI = request.getRequestURI();
         String logId = (String) request.getAttribute(LOG_ID);
+        String memberId = (String) request.getAttribute(MEMBER_ID);
         Long startTime = (Long) request.getAttribute(START_TIME);
         long duration = System.currentTimeMillis() - startTime;
 
-        log.info("RESPONSE [{}][{}][{}ms]", logId, requestURI, duration);
+        log.info("RESPONSE [{}][{}][{}ms] from memberId = {}", logId, requestURI, duration, memberId);
 
         if (ex != null) {
             log.error("EXCEPTION [{}][{}]", logId, requestURI, ex);
