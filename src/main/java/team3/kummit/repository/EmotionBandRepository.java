@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import team3.kummit.domain.EmotionBand;
 
@@ -25,5 +28,14 @@ public interface EmotionBandRepository extends JpaRepository<EmotionBand, Long> 
             "WHERE eb.endTime > :currentTime and eb.id in :emotionBandIdList")
     List<EmotionBand> findAllByEmotionBandIdListWithSongs(List<Long> emotionBandIdList, LocalDateTime currentTime);
 
+    @Modifying
+    @Transactional
+    @Query("update EmotionBand e set e.likeCount = e.likeCount + 1 where e.id = :emotionBandId")
+    int incrementLikeCount(@Param("emotionBandId") Long emotionBandId);
+
+    @Modifying
+    @Transactional
+    @Query("update EmotionBand e set e.likeCount = e.likeCount - 1 where e.id = :emotionBandId")
+    int decrementLikeCount(@Param("emotionBandId") Long emotionBandId);
 
 }
